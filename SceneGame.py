@@ -15,6 +15,9 @@ class SceneGame(Scene):
         self.player = Player(window, controller)
         self.objects.add(self.player)
 
+        self.test_surface = p.Surface((100, 100))
+        self.test_surface.fill((0, 0, 0))
+
     def on_destroy(self):
         pass
 
@@ -22,7 +25,7 @@ class SceneGame(Scene):
         pass
 
     def early_update(self, delta_time):
-        pass
+        self.objects.early_update(delta_time)
 
     def update(self, delta_time):
         self.objects.process_removals()
@@ -34,4 +37,4 @@ class SceneGame(Scene):
 
     def draw(self, canvas):
         self.objects.draw(canvas)
-        # p.draw.rect(canvas.surface, (0, 0, 0), p.Rect((500, 500), (100, 100)))
+        self.window.canvas.render(self.test_surface, (0, 0), "Terrain")

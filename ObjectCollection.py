@@ -37,6 +37,4 @@ class ObjectCollection:
             self.new_objects.clear()
 
     def process_removals(self):
-        for obj_iterator, obj in enumerate(self.objects):
-            if obj.is_queued_for_removal:
-                self.objects.pop(obj_iterator)
+        self.objects = [obj for obj in self.objects if not obj.is_queued_for_removal]

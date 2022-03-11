@@ -1,4 +1,5 @@
 from C_Transform import Transform
+from C_InstanceID import InstanceID
 from Debug import Debug
 
 
@@ -10,7 +11,12 @@ class Object:
         self.is_queued_for_removal = False
 
         self.transform = Transform(self)
-        self.add_component(self.transform)
+
+        self.instance_ID = InstanceID(self)
+
+        print(self.instance_ID.id)
+
+        self.add_component(self.transform, self.instance_ID)
 
     def awake(self):
         for component in self.components.values():
@@ -48,7 +54,7 @@ class Object:
         if comp_type in self.components:
             return self.components[comp_type]
         else:
-            Debug.log_warning(f"Component{comp_type} not found in {self.name}")
+            Debug.log_error(f"Component{comp_type} not found in {self.name}")
             return None
 
     def queue_for_removal(self):

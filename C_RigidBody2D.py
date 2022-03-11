@@ -4,18 +4,26 @@ from Physics import Physics
 
 
 class Force:
-    def __init__(self, initial_force, resistance):
-        self.vector = initial_force
-        self.resistance = 1 - resistance
+    def __init__(self, resistance, velocity, remove):
+        self.remove = remove
+        self.velocity = velocity
+        self.acceleration = Vector2()
+        self.resistance = -abs(resistance)
         self.is_queued_for_removal = False
 
-    def queue_for_removal(self):
-        self.is_queued_for_removal = True
+    def set_velocity(self, vel):
+        self.velocity.update(vel)
+
+    def set_acceleration(self, acc):
+        self.acceleration.update(acc)
 
     def update(self, delta_time):
-        self.vector -= self.resistance * delta_time
-        if self.vector < 0.001:
-            self.queue_for_removal()
+        self.acceleration += self.velocity * self.resistance
+        self.velocity += self.acceleration
+
+        if self.remove:
+            if self.velocity.x <= 0:
+                self.is_queued_for_removal = True
 
 
 class RigidBody2D(Component):
@@ -29,20 +37,27 @@ class RigidBody2D(Component):
     def set_velocity(self, vel):
         self.velocity.update(vel)
 
+    def add_velocity(self, vel):
+        self.velocity += vel
+
     def set_gravity(self, gravity):
         self.gravity = gravity
 
-    def add_force(self, vector, resistance):
-        self.forces.append(Force(vector, resistance))
+    def add_force(self, resistance, velocity=Vector2(), remove=True):
+        force = Force(resistance, velocity, remove)
+        self.forces.append(force)
 
-    def move_towards(self, pos):
-        pass
+        return force
 
     def update(self, delta_time):
+        # self.velocity.update((0, 0))
+
+        new_forces = []
         for force in self.forces:
-            self.velocity += force.vector
+            self.velocity += force.velocity + 0.5 * force.acceleration
             force.update(delta_time)
-            if force.is_queued_for_removal:
-                self.forces.remove(force)
-        # stuff
+            if not force.is_queued_for_removal:
+                new_forces.append(force)
+        self.forces = new_forces
+
         self.owner.transform.add_position_pos(self.velocity)

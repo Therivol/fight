@@ -27,10 +27,13 @@ class Window:
         self.canvas.fill((110, 120, 145))
 
     def end_draw(self):
+        self.canvas.draw()
+
         self.view.blit(p.transform.scale(self.canvas.surface, self.view.get_size()), (0, 0))
         self.view_destination = (self.window.get_width() / 2 - self.view.get_width() / 2,
                                  self.window.get_height() / 2 - self.view.get_height() / 2)
         self.window.blit(self.view, self.view_destination)
+
         p.display.update()
 
     def resize(self, size):

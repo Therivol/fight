@@ -1,0 +1,4 @@
+
+
+class Quadtree:
+    pass

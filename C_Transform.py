@@ -6,6 +6,14 @@ class Transform(Component):
     def __init__(self, owner):
         super().__init__(owner)
         self.position = Vector2()
+        self.last_position = Vector2()
+        self.is_static = False
+
+    def early_update(self, delta_time):
+        self.last_position.update(self.position)
+
+    def set_static(self, static):
+        self.is_static = static
 
     def set_position(self, pos):
         self.position.update(pos)

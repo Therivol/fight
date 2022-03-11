@@ -1,16 +1,23 @@
 import pygame as p
 import json
+from Debug import Debug
 
 
 class Controller:
     def __init__(self):
-        self.key_binds = {'w': "UP", "space": "UP"}
+
+        self.key_binds = {}
+        self.load_key_binds("settings/key_binds.json")
+
         self.actions = {action: False for action in self.key_binds.values()}
-        print(self.actions)
         self.raw_keys = {}
         self.mouse_buttons = {}
         self.handled_keys = []
         self.handled_buttons = []
+
+    def load_key_binds(self, path):
+        with open(path, 'r') as key_binds:
+            self.key_binds = json.load(key_binds)
 
     def reset(self):
         for action in self.actions:
@@ -18,6 +25,7 @@ class Controller:
 
     def set_key(self, key):
         key_name = p.key.name(key)
+        # Debug.log(key_name)
         self.raw_keys[key_name] = True
         if key_name in self.key_binds.keys():
             self.actions[self.key_binds[key_name]] = True

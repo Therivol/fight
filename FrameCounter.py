@@ -17,5 +17,5 @@ class FrameCounter:
             self.fps_update = 0
 
     def draw(self, canvas):
-        canvas.blit_ui(self.fps_text, (10, 10))
+        canvas.render(self.fps_text, (10, 10), "UI")
 
